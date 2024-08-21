@@ -1,6 +1,13 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	"golang_jwt_auth/initializers"
+)
+
+func init() {
+	initializers.ConnectToDb()
+}
 
 func main() {
 	StartGinServer()
