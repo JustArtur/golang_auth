@@ -1,51 +1,41 @@
 package services
 
 import (
+	"encoding/base64"
 	"fmt"
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/google/uuid"
-	"golang.org/x/crypto/bcrypt"
 	"os"
 	"time"
 )
 
-type ClaimsArgs struct {
-	LastIpAddress string
-}
-
 type CustomClaims struct {
 	LastIpAddress string `json:"last_ip_address"`
+	UserId        string `json:"user_id"`
 	jwt.RegisteredClaims
 }
 
-func GenerateAccessToken(claims_args ClaimsArgs) (string, string) {
-	accessTokenId := uuid.NewString()
+func GenerateAccessToken(UserID string, LastIpAddress string) (string, string) {
 
 	claims := CustomClaims{
-		LastIpAddress: claims_args.LastIpAddress,
+		LastIpAddress: LastIpAddress,
+		UserId:        UserID,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: &jwt.NumericDate{Time: time.Now().Add(time.Minute * 30)},
 			Issuer:    "golang-auth",
-			ID:        accessTokenId,
 		},
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS512, claims)
-	jwtAccessToken, err := token.SignedString([]byte(os.Getenv("mySigningKey")))
-	refreshToken := GenerateRefreshToken(accessTokenId)
+	accessToken, _ := token.SignedString([]byte(os.Getenv("mySigningKey")))
+	refreshToken := GenerateRefreshToken(UserID, LastIpAddress)
 
-	fmt.Println(claims)
-	fmt.Println(jwtAccessToken, err, token)
-
-	return jwtAccessToken, refreshToken
+	return accessToken, refreshToken
 }
 
-func GenerateRefreshToken(accessTokenId string) string {
-	refreshToken, err := bcrypt.GenerateFromPassword([]byte(accessTokenId), bcrypt.DefaultCost)
+func GenerateRefreshToken(UserID string, LastIpAddress string) string {
+	refreshTokenData := fmt.Sprintf("userID:%s;userIP:%s;exp:%d", UserID, LastIpAddress, time.Now().Add(24*time.Hour).Unix())
 
-	if err != nil {
-		panic(err)
-	}
+	refreshToken := base64.StdEncoding.EncodeToString([]byte(refreshTokenData))
 
-	return string(refreshToken)
+	return refreshToken
 }

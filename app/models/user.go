@@ -1,8 +1,8 @@
 package models
 
 import (
+	"github.com/absagar/go-bcrypt"
 	"github.com/google/uuid"
-	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 	"time"
 )
@@ -25,7 +25,7 @@ func (u *User) BeforeSave(tx *gorm.DB) (err error) {
 }
 
 func generateHash(object string) (string, error) {
-	hashed, err := bcrypt.GenerateFromPassword([]byte(object), bcrypt.DefaultCost)
+	hashed, err := bcrypt.Hash(object)
 
-	return string(hashed), err
+	return hashed, err
 }
