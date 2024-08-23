@@ -1,7 +1,7 @@
 package initializers
 
 import (
-	"golang_jwt_auth/models"
+	"golang_jwt_auth/app/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -22,4 +22,5 @@ func ConnectToDb() {
 	if migrate_err != nil {
 		panic(migrate_err)
 	}
+
 }
