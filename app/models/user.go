@@ -1,9 +1,11 @@
 package models
 
 import (
-	"github.com/absagar/go-bcrypt"
+	"fmt"
 	"github.com/google/uuid"
+	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
+	"log"
 	"time"
 )
 
@@ -18,14 +20,19 @@ type User struct {
 }
 
 func (u *User) BeforeSave(tx *gorm.DB) (err error) {
-	hashedRefreshToken, err := generateHash(u.RefreshToken)
+	hashedRefreshToken := generateHash(u.RefreshToken)
 
 	u.RefreshToken = hashedRefreshToken
 	return
 }
 
-func generateHash(object string) (string, error) {
-	hashed, err := bcrypt.Hash(object)
+func generateHash(object string) string {
+	hashed, err := bcrypt.GenerateFromPassword([]byte(object), bcrypt.DefaultCost)
 
-	return hashed, err
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println(object)
+	return string(hashed)
 }
