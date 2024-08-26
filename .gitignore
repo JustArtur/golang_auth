@@ -1,5 +1,6 @@
 .idea
 .DS_Store
 auth_app/.env.dev
+auth_app/.env.docker
 /tmp
 /auth_app/tmp
