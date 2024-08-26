@@ -1,14 +1,14 @@
 package main
 
 import (
+	"auth_app/controllers"
+	"auth_app/initializers"
 	"github.com/gin-gonic/gin"
-	"golang_jwt_auth/app/controllers"
-	"golang_jwt_auth/app/initializers"
 )
 
 func init() {
-	initializers.ConnectToDb()
 	initializers.LoadEnv()
+	initializers.ConnectToDb()
 }
 
 func main() {

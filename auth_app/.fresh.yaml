@@ -1,6 +1,6 @@
 version: "1"
 root: .
-main_path: "app/main.go"
+main_path: "main.go"
 tmp_path: ./tmp
 build_name: runner-build
 build_args: ""

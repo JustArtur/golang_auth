@@ -1,0 +1,21 @@
+services:
+    db:
+      image: postgres:15
+      restart: always
+      ports:
+        - "5432:5432"
+      env_file: auth_app/.env.docker
+      volumes:
+        - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+    golang_auth:
+      build: auth_app
+      restart: always
+      ports:
+        - "8080:8080"
+      env_file:
+        - auth_app/.env.docker
+      environment:
+        ENV_FILE: docker
+      depends_on:
+        - db

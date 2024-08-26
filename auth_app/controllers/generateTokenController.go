@@ -1,13 +1,13 @@
 package controllers
 
 import (
+	"auth_app/initializers"
+	"auth_app/models"
+	"auth_app/services"
 	"encoding/base64"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
-	"golang_jwt_auth/app/initializers"
-	"golang_jwt_auth/app/models"
-	"golang_jwt_auth/app/services"
 )
 
 var UserFields struct {
